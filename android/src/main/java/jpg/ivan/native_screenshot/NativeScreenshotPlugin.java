@@ -2,15 +2,19 @@ package jpg.ivan.native_screenshot;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -19,6 +23,8 @@ import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -206,8 +212,8 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 		String externalDir = Environment.getExternalStorageDirectory().getAbsolutePath();
 
 		String sDir = externalDir
-						+ File.separator
-						+ getApplicationName();
+				+ File.separator
+				+ getApplicationName();
 
 		File dir = new File(sDir);
 
@@ -223,6 +229,37 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 
 		return dirPath;
 	} // getScreenshotPath()
+
+	private String saveImage(Bitmap bitmap, @NonNull String name) throws IOException {
+		boolean saved;
+		OutputStream fos;
+		ContentResolver resolver = context.getContentResolver();
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
+		contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
+		Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+		fos = resolver.openOutputStream(imageUri);
+		saved = bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+		fos.flush();
+		fos.close();
+		String finalPath = getRealPathFromURI(context, imageUri);
+ 		return finalPath;
+	}
+
+	public String getRealPathFromURI(Context context, Uri contentUri) {
+		Cursor cursor = null;
+		try {
+			String[] proj = { MediaStore.Images.Media.DATA };
+			cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			return cursor.getString(column_index);
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+	}
 
 	private String writeBitmap(Bitmap bitmap) {
 		try {
@@ -344,7 +381,7 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 
 			view.setDrawingCacheEnabled(false);
 
-			String path = writeBitmap(bitmap);
+			String path = saveImage(bitmap, getScreenshotName());
 			if( path == null || path.isEmpty() ) {
 				this.ssError = true;
 				this.ssPath = null;
@@ -380,10 +417,10 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 
 		Log.println(Log.INFO, TAG, "Requesting permissions...");
 		this.activity.requestPermissions(
-			new String[]{
-				Manifest.permission.WRITE_EXTERNAL_STORAGE
-			},
-			11
+				new String[]{
+						Manifest.permission.WRITE_EXTERNAL_STORAGE
+				},
+				11
 		); // requestPermissions()
 
 		Log.println(Log.INFO, TAG, "No permissions :(");
