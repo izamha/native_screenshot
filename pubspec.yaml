@@ -1,13 +1,13 @@
 name: native_screenshot
 description: A simple plugin to take screenshots using native code (iOS & Android).
-version: 1.0.0
+version: 0.0.5
 email: Ivan Pompa-García <ivan.pompa@gmail.com>
 homepage: https://gitlab.com/ivanjpg/native_screenshot
 repository: https://gitlab.com/ivanjpg/native_screenshot.git
 issue_tracker: https://gitlab.com/ivanjpg/native_screenshot/-/issues
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.1.0 <3.0.0"
   flutter: ">=1.10.0"
 
 dependencies:

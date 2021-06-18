@@ -1,10 +1,3 @@
-## 1.0.0 - 04.04.2020
-### Fixed
-- Null-safety added to the only method we have: `takeScreenshot()`.
-- The example has been updated to use recent API version.
-
----
-
 ## 0.0.5 - 25.12.2020
 - Fixed `README.md` style consistency.
 ### Android

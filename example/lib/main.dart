@@ -1,74 +1,80 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'dart:async';
+
+import 'package:flutter/services.dart';
 import 'package:native_screenshot/native_screenshot.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
-	@override
-	_MyAppState createState() => _MyAppState();
+  @override
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-	Widget _imgHolder;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-	@override
-	void initState() {
-		super.initState();
+  Widget _imgHolder;
 
-		_imgHolder = Center(
-			child: Icon(Icons.image),
-		);
-	} // initState()
+  @override
+  void initState() {
+    super.initState();
 
-	@override
-	Widget build(BuildContext context) {
-		return MaterialApp(
-			home: Scaffold(
-				appBar: AppBar(
-					title: Text('NativeScreenshot Example'),
-				),
-				bottomNavigationBar: ButtonBar(
-					alignment: MainAxisAlignment.center,
-					children: <Widget>[
-						ElevatedButton(
-							child: Text('Press to capture screenshot'),
-							onPressed: () async {
-								String path = await NativeScreenshot.takeScreenshot();
+    _imgHolder = Center(
+      child: Icon(Icons.image),
+    );
+  } // initState()
 
-								debugPrint('Screenshot taken, path: $path');
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text('NativeScreenshot Example'),
+        ),
+        bottomNavigationBar: ButtonBar(
+          alignment: MainAxisAlignment.center,
+          children: <Widget>[
+            RaisedButton(
+              child: Text('Press to capture screenshot'),
+              onPressed: () async {
+                String path = await NativeScreenshot.takeScreenshot();
 
-								if( path == null || path.isEmpty ) {
-									ScaffoldMessenger.of(context).showSnackBar(
-										SnackBar(
-											content: Text('Error taking the screenshot :('),
-											backgroundColor: Colors.red,
-										)
-									); // showSnackBar()
+                debugPrint('Screenshot taken, path: $path');
 
-									return;
-								} // if error
+                if( path == null || path.isEmpty ) {
+                  _scaffoldKey.currentState.showSnackBar(
+                    SnackBar(
+                      content: Text('Error taking the screenshot :('),
+                      backgroundColor: Colors.red,
+                    )
+                  ); // showSnackBar()
 
-								ScaffoldMessenger.of(context).showSnackBar(
-									SnackBar(
-										content: Text('The screenshot has been saved to: $path')
-									)
-								); // showSnackBar()
+                  return;
+                } // if error
 
-								File imgFile = File(path);
-								_imgHolder = Image.file(imgFile);
+                _scaffoldKey.currentState.showSnackBar(
+                  SnackBar(
+                    content: Text('The screenshot has been saved to: $path')
+                  )
+                ); // showSnackBar()
 
-								setState(() {});
-							},
-						)
-					],
-				),
-				body: Container(
-					constraints: BoxConstraints.expand(),
-					child: _imgHolder,
-				),
-			),
-		);
-	} // build()
+                File imgFile = File(path);
+                _imgHolder = Image.file(imgFile);
+
+                setState(() {});
+              },
+            )
+          ],
+        ),
+        body: Container(
+          constraints: BoxConstraints.expand(),
+          child: _imgHolder,
+        ),
+      ),
+    );
+  } // build()
 } // _MyAppState
