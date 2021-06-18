@@ -23,12 +23,6 @@ You must add
 
 to your `AndroidManifest.xml` inside `android/src/main/` directory.
 
-Also you need to add a property to `application` tag to fix an issue with permissions writing to `EXTERNAL_STORAGE`:
-
-```
-android:requestLegacyExternalStorage="true"
-```
-
 ### iOS
 If don't add
 
