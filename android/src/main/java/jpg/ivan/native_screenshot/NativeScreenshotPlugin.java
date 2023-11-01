@@ -178,8 +178,7 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 	private String getScreenshotName() {
 		java.text.SimpleDateFormat sf = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
 		String sDate = sf.format(new Date());
-
-		return "native_screenshot-" + sDate + ".png";
+		return "askfield-" + sDate + ".png";
 	} // getScreenshotName()
 
 	private String getApplicationName() {
