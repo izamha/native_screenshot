@@ -84,6 +84,7 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 				flutterPluginBinding.getBinaryMessenger(),
 				null,
 				flutterPluginBinding.getFlutterEngine().getRenderer()
+				// flutterPluginBinding.getEngineGroup()
 		); // initPlugin()
 	} // onAttachedToEngine()
 
@@ -176,7 +177,8 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 
 	// Own functions, plugin specific functionality
 	private String getScreenshotName() {
-		java.text.SimpleDateFormat sf = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
+		java.text.SimpleDateFormat sf;
+		sf = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
 		String sDate = sf.format(new Date());
 		return "askfield-" + sDate + ".png";
 	} // getScreenshotName()
