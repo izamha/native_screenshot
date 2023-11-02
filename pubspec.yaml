@@ -8,7 +8,6 @@ issue_tracker: https://gitlab.com/ivanjpg/native_screenshot/-/issues
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=1.10.0"
 
 dependencies:
   flutter:

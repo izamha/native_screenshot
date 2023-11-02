@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:native_screenshot/native_screenshot.dart';
 
 void main() => runApp(MyApp());
@@ -14,9 +12,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
-  Widget _imgHolder;
+  Widget? _imgHolder;
 
   @override
   void initState() {
@@ -38,29 +36,27 @@ class _MyAppState extends State<MyApp> {
         bottomNavigationBar: ButtonBar(
           alignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(
+            ElevatedButton(
               child: Text('Press to capture screenshot'),
               onPressed: () async {
                 String path = await NativeScreenshot.takeScreenshot();
 
                 debugPrint('Screenshot taken, path: $path');
 
-                if( path == null || path.isEmpty ) {
-                  _scaffoldKey.currentState.showSnackBar(
+                if (path.isEmpty) {
+                  _scaffoldKey.currentState!.showSnackBar(
                     SnackBar(
                       content: Text('Error taking the screenshot :('),
                       backgroundColor: Colors.red,
-                    )
+                    ),
                   ); // showSnackBar()
 
                   return;
                 } // if error
 
-                _scaffoldKey.currentState.showSnackBar(
-                  SnackBar(
-                    content: Text('The screenshot has been saved to: $path')
-                  )
-                ); // showSnackBar()
+                _scaffoldKey.currentState!.showSnackBar(SnackBar(
+                    content: Text(
+                        'The screenshot has been saved to: $path'))); // showSnackBar()
 
                 File imgFile = File(path);
                 _imgHolder = Image.file(imgFile);
