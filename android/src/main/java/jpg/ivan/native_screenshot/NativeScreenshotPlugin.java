@@ -169,7 +169,6 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 
 		if( this.ssError || this.ssPath == null || this.ssPath.isEmpty() ) {
 			result.success(null);
-
 			return;
 		} // if error
 
@@ -203,34 +202,54 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 
 		name.append(cs);
 
-		if( name.toString().trim().isEmpty() ) {
+		if(name.toString().trim().isEmpty() ) {
 			return "NativeScreenshot";
 		}
 
 		return name.toString();
 	} // getApplicationName()
 
+	// getScreenshotPath()
+//	private String getScreenshotPath() {
+//		String externalDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+//
+//		String sDir = externalDir
+//				+ File.separator
+//				+ getApplicationName();
+//
+//		File dir = new File(sDir);
+//
+//		String dirPath;
+//
+//		if( dir.exists() || dir.mkdir()) {
+//			dirPath = sDir + File.separator + getScreenshotName();
+//		} else {
+//			dirPath = externalDir + File.separator + getScreenshotName();
+//		}
+//
+//		Log.println(Log.INFO, TAG, "Built ScreenshotPath: " + dirPath);
+//
+//		return dirPath;
+//	}
 	private String getScreenshotPath() {
 		String externalDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+		String appName = getApplicationName();
+		String screenshotName = getScreenshotName();
 
-		String sDir = externalDir
-				+ File.separator
-				+ getApplicationName();
-
+		String sDir = externalDir + File.separator + appName;
 		File dir = new File(sDir);
 
 		String dirPath;
 
-		if( dir.exists() || dir.mkdir()) {
-			dirPath = sDir + File.separator + getScreenshotName();
-		} else {
-			dirPath = externalDir + File.separator + getScreenshotName();
+		if (!dir.exists()) {
+			dir.mkdirs();
 		}
+		dirPath = sDir + File.separator + screenshotName;
 
 		Log.println(Log.INFO, TAG, "Built ScreenshotPath: " + dirPath);
-
 		return dirPath;
-	} // getScreenshotPath()
+	}
+
 
 	private String saveImage(Bitmap bitmap, @NonNull String name) throws IOException {
 		boolean saved;
