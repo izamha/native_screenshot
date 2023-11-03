@@ -54,9 +54,11 @@ class _MyAppState extends State<MyApp> {
                   return;
                 } // if error
 
-                _scaffoldKey.currentState!.showSnackBar(SnackBar(
-                    content: Text(
-                        'The screenshot has been saved to: $path'))); // showSnackBar()
+                _scaffoldKey.currentState!.showSnackBar(
+                  SnackBar(
+                    content: Text('The screenshot has been saved to: $path'),
+                  ),
+                ); // showSnackBar()
 
                 File imgFile = File(path);
                 _imgHolder = Image.file(imgFile);

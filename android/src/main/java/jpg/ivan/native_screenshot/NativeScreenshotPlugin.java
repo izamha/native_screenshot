@@ -25,7 +25,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -177,11 +179,10 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 
 	// Own functions, plugin specific functionality
 	private String getScreenshotName() {
-		java.text.SimpleDateFormat sf;
-		sf = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
 		String sDate = sf.format(new Date());
 		return "askfield-" + sDate + ".png";
-	} // getScreenshotName()
+	}
 
 	private String getApplicationName() {
 		ApplicationInfo appInfo = null;
@@ -226,7 +227,7 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 			dirPath = externalDir + File.separator + getScreenshotName();
 		}
 
-		Log.println(Log.INFO, TAG, "Built ScreeshotPath: " + dirPath);
+		Log.println(Log.INFO, TAG, "Built ScreenshotPath: " + dirPath);
 
 		return dirPath;
 	} // getScreenshotPath()
